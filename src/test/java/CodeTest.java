@@ -10,26 +10,40 @@ public class CodeTest {
     String password;
     String realMail;
     String realPassword;
+    String searchMail;
+    String searchPassword;
 
-    @BeforeMethod (onlyForGroups = "register")
+    @BeforeMethod(onlyForGroups = "register")
     public void setup() {
         Code.setup();
     }
-    @BeforeMethod (onlyForGroups = "login")
+
+    @BeforeMethod(onlyForGroups = "login")
     public void loginSetup() {
         Login.loginSetup();
     }
 
-    @AfterMethod (onlyForGroups = "register")
-    public void close(){
+    @BeforeMethod(onlyForGroups = "search")
+    public void searchLoginSetup() {
+        Search.searchLoginSetup();
+    }
+
+    @AfterMethod(onlyForGroups = "register")
+    public void close() {
         Code.browserClose();
     }
-    @AfterMethod (onlyForGroups = "login")
-    public void loginClose(){
+
+    @AfterMethod(onlyForGroups = "login")
+    public void loginClose() {
         Login.loginClose();
     }
 
-    @Test (groups = "register")
+    @AfterMethod(onlyForGroups = "search")
+    public void searchLoginClose() {
+        Search.searchLoginClose();
+    }
+
+    @Test(groups = "register")
     public void registerPositive() {
         fName = "";
         vUsername = "";
@@ -43,7 +57,7 @@ public class CodeTest {
         Assert.assertEquals(Code.createAccount(), true);
     }
 
-    @Test (groups = "register")
+    @Test(groups = "register")
     public void registerNegative() {
         fName = "";
         vUsername = "";
@@ -75,5 +89,29 @@ public class CodeTest {
         Login.pressSign();
         Login.loginTyper(realMail, realPassword);
         Assert.assertNotEquals(Login.signInPress(), false);
+    }
+
+    @Test(groups = "search")
+    public void searchPositiveTest() {
+        searchMail = "re.saduikis@gmail.com";
+        searchPassword = "gaidiena123";
+        Search.searchLoginSetup();
+        Search.searchPressSign();
+        Search.searchLoginTyper(searchMail, searchPassword);
+        Search.searchSignInPress();
+        Search.searchCourses();
+        Assert.assertEquals(Search.searchTrueFalse(), true);
+    }
+
+    @Test(groups = "search")
+    public void searchNegativeTest() {
+        searchMail = "re.saduikis@gmail.com";
+        searchPassword = "gaidiena123";
+        Search.searchLoginSetup();
+        Search.searchPressSign();
+        Search.searchLoginTyper(searchMail, searchPassword);
+        Search.searchSignInPress();
+        Search.searchCourses();
+        Assert.assertNotEquals(Search.searchTrueFalse(), false);
     }
 }
